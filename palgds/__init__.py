@@ -1,1 +1,1 @@
-print('initializing palgds ...')
+print('initializing palgds.')
