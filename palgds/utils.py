@@ -22,7 +22,7 @@ def read_ports_from_txt_file(filename):
         print("Error: No file exist with name ", filename, " for reading ports.", sep="'")
         raise FileNotFoundError from None
 
-    ports = []
+    ports = {}
     s = lines[0]
     s = s.replace(' ', '') #remove all whitespaces
     while len(s) > 0:
@@ -32,8 +32,8 @@ def read_ports_from_txt_file(filename):
             break
         p = s[k + 1:l]
         try:
-            x, y, angle= p.split(',')
-            ports.append((float(x), float(y), float(angle)/180*np.pi))
+            name, x, y, angle= p.split(',')
+            ports.update({name: (float(x), float(y), float(angle)/180*np.pi)})
         except:
             print('Error in splitting coordinates of ports! filename:', filename)
             raise ValueError

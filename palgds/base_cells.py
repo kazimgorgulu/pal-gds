@@ -6,7 +6,7 @@ class PCell:
     def __init__(self, cell, ports=None):
         self._validate_inputs(cell, ports)
         self.cell = cell
-        self.ports = ports if ports is not None else []
+        self.ports = ports if ports is not None else {}
 
     def _validate_inputs(self, cell, ports):
         pass
@@ -30,7 +30,7 @@ class Trace(PCell):
 
     def __init__(self, name, points, width=0.45, offset=0, bend_radius=5, layer=0, datatype=0):
         cell = self._generate_cell(name, points, width, offset, bend_radius, layer, datatype)
-        ports = [(points[0][0], points[0][1], 180), (points[-1][0], points[-1][1], 0)]
+        ports = {"in": (points[0][0], points[0][1], 180), "out": (points[-1][0], points[-1][1], 0)}
         super().__init__(cell, ports)
 
     def _generate_cell(self, name, points, width, offset, bend_radius, layer, datatype):
@@ -85,7 +85,7 @@ class GDSCell(PCell):
         if ports is not None:
             return ports
         elif ports_filename is None:
-            return []
+            return {}
         else:
             return read_ports_from_txt_file(ports_filename)
 
@@ -103,7 +103,7 @@ class GDSRawCell(PCell):
         if ports is not None:
             return ports
         elif ports_filename is None:
-            return []
+            return {}
         else:
             return read_ports_from_txt_file(ports_filename)
 

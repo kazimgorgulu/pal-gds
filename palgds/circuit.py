@@ -105,11 +105,10 @@ class Circuit(bc.PCell):
         return cells_of_links
 
     def _generate_ports(self, *args, **kwargs):
-        ports = []
-
+        ports = {}
+        k = 0
         for key in self.pcells:
-            num_of_ports = len(self.pcells[key].ports)
-            for i in range(num_of_ports):
+            for i in self.pcells[key].ports:
                 is_used = False
                 for link in self.links:
                     if link["from"][0] == key and link["from"][1] == i:
@@ -120,6 +119,8 @@ class Circuit(bc.PCell):
                     _port = self.pcells[key].ports[i]
                     _port = utils.apply_transformation(_port, self.translations[key], self.rotations[key],
                                                        self.reflections[key])
-                    ports.append(_port)
+
+                    ports.update({"port"+str(k):_port})
+                    k += 1
 
         return ports
