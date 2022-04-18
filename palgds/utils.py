@@ -22,6 +22,7 @@ def read_ports_from_txt_file(filename):
         print("Error: No file exist with name ", filename, " for reading ports.", sep="'")
         raise FileNotFoundError from None
 
+    orientation_dict = {"R":0, "L":np.pi, "U":np.pi/2, "D":3/2*np.pi}
     ports = {}
     s = lines[0]
     s = s.replace(' ', '') #remove all whitespaces
@@ -32,8 +33,9 @@ def read_ports_from_txt_file(filename):
             break
         p = s[k + 1:l]
         try:
-            name, x, y, angle= p.split(',')
-            ports.update({name: (float(x), float(y), float(angle)/180*np.pi)})
+            name, x, y, orientation= p.split(',')
+            angle = orientation_dict[orientation]
+            ports.update({name: (float(x), float(y), angle)})
         except:
             print('Error in splitting coordinates of ports! filename:', filename)
             raise ValueError
