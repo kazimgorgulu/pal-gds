@@ -18,11 +18,11 @@ class Circuit(bc.PCell):
         self.default_bend_radius = default_bend_radius
 
         self._preprocess_inputs()
-        cell = self._generate_cell(name)
-        ports = self._generate_ports()
+        cell = self._create_cell(name)
+        ports = self._create_ports()
         super().__init__(cell, ports)
 
-    def _generate_cell(self, name):
+    def _create_cell(self, name):
         cell = gdstk.Cell(name)
         for key in self.pcells:
             cell.add(gdstk.Reference(self.pcells[key].cell,
@@ -30,7 +30,7 @@ class Circuit(bc.PCell):
                                     x_reflection=self.reflections[key],
                                     rotation=self.rotations[key]))
 
-        cells_of_links = self._generate_cells_of_links(name)
+        cells_of_links = self._create_cells_of_links(name)
         for _cell in cells_of_links:
             cell.add(gdstk.Reference(_cell))
 
@@ -78,7 +78,7 @@ class Circuit(bc.PCell):
             if "bend_radius" not in link.keys():
                 link.update({"bend_radius": self.default_bend_radius})
 
-    def _generate_cells_of_links(self, name):
+    def _create_cells_of_links(self, name):
         cells_of_links = []
         k = 0
         for link in self.links:
@@ -104,7 +104,7 @@ class Circuit(bc.PCell):
 
         return cells_of_links
 
-    def _generate_ports(self, *args, **kwargs):
+    def _create_ports(self, *args, **kwargs):
         ports = {}
         k = 0
         for key in self.pcells:
