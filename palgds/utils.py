@@ -33,9 +33,9 @@ def read_ports_from_txt_file(filename):
             break
         p = s[k + 1:l]
         try:
-            name, x, y, orientation= p.split(',')
+            name, x, y, orientation, port_type= p.split(',')
             angle = orientation_dict[orientation]
-            ports.update({name: (float(x), float(y), angle)})
+            ports.update({name: (float(x), float(y), angle, port_type)})
         except:
             print('Error in splitting coordinates of ports! filename:', filename)
             raise ValueError
@@ -205,4 +205,4 @@ def apply_transformation(port, translation=(0, 0), rotation=0, x_reflection=Fals
     p_x = p_x + translation[0]
     p_y = p_y + translation[1]
 
-    return p_x, p_y, p_angle
+    return p_x, p_y, p_angle, port[3]

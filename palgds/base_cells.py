@@ -28,9 +28,9 @@ class PCell:
 
 class Trace(PCell):
 
-    def __init__(self, name, points, width=0.45, offset=0, bend_radius=5, layer=0, datatype=0):
+    def __init__(self, name, points, width=0.45, offset=0, bend_radius=5, port_type='op', layer=0, datatype=0):
         cell = self._create_cell(name, points, width, offset, bend_radius, layer, datatype)
-        ports = {"in": (points[0][0], points[0][1], 180), "out": (points[-1][0], points[-1][1], 0)}
+        ports = {"in": (points[0][0], points[0][1], 180), "out": (points[-1][0], points[-1][1], 0, port_type)}
         super().__init__(cell, ports)
 
     def _create_cell(self, name, points, width, offset, bend_radius, layer, datatype):

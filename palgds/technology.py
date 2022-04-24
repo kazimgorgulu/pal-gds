@@ -5,14 +5,14 @@ class OpticalTrace(bc.Trace):
     """Trace template for optical trace"""
 
     def __init__(self, name, points, bend_radius=5):
-        super().__init__(name, points, width=0.45, bend_radius=bend_radius, offset=0, layer=0, datatype=0)
+        super().__init__(name, points, width=0.45, bend_radius=bend_radius, layer=0, datatype=0)
         pass
 
 class MetalTrace(bc.Trace):
     """Trace template for metal trace"""
 
-    def __init__(self, name, points, bend_radius=5):
-        super().__init__(name, points, width=1.5, bend_radius=bend_radius, offset=0, layer=10, datatype=0)
+    def __init__(self, name, points, bend_radius=0):
+        super().__init__(name, points, width=1.5, bend_radius=bend_radius, port_type='el', layer=10, datatype=0)
         pass
 
 class Technology:
