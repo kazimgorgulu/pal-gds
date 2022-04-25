@@ -1,18 +1,18 @@
 import palgds.base_cells as bc
 
 
-class OpticalTrace(bc.Trace):
+class WaveguideTrace(bc.Trace):
     """Trace template for optical trace"""
 
     def __init__(self, name, points, bend_radius=5):
-        super().__init__(name, points, width=0.45, bend_radius=bend_radius, layer=0, datatype=0)
+        super().__init__(name, points, width=0.45, bend_radius=bend_radius, layer=0, datatype=0, port_type='op')
         pass
 
-class MetalTrace(bc.Trace):
+class WireTrace(bc.Trace):
     """Trace template for metal trace"""
 
     def __init__(self, name, points, bend_radius=0):
-        super().__init__(name, points, width=1.5, bend_radius=bend_radius, port_type='el', layer=10, datatype=0)
+        super().__init__(name, points, width=1.5, bend_radius=bend_radius, layer=10, datatype=0, port_type='el')
         pass
 
 class Technology:
@@ -35,13 +35,12 @@ TECH = Technology()
 
 # Traces
 TECH.TRACE = TechnologySubGroup('TRACE')
-TECH.TRACE.OPTICAL_TRACE = OpticalTrace
-TECH.TRACE.METAL_TRACE = MetalTrace
+TECH.TRACE.WAVEGUIDE_TRACE = WaveguideTrace
+TECH.TRACE.WIRE_TRACE = WireTrace
 
 # Layers - [LAYER, DATABASE]
 TECH.LAYER = TechnologySubGroup('LAYER')
 TECH.LAYER.CORE = [0, 0]
-TECH.LAYER.CLD = [1, 0]
 
 # Dimensions
 TECH.DIMENSION = TechnologySubGroup('DIMENSION')

@@ -9,6 +9,7 @@ class Circuit(bc.PCell):
 
     def __init__(self, name, pcells, translations=None, rotations=None, reflections=None, links=None,
                  op_trace=None, op_bend_radius=None, el_trace=None, el_bend_radius=None):
+        super().__init__(name)
         self.pcells = pcells
         self.translations = translations
         self.rotations = rotations
@@ -20,32 +21,28 @@ class Circuit(bc.PCell):
         self.el_bend_radius = el_bend_radius
 
         self._preprocess_inputs()
-        cell = self._create_cell(name)
-        ports = self._create_ports()
-        super().__init__(cell, ports)
+        self._create_elements(name)
+        self._create_ports()
 
-    def _create_cell(self, name):
-        cell = gdstk.Cell(name)
+    def _create_elements(self, name):
+        # Add child cells:
         for key in self.pcells:
-            cell.add(gdstk.Reference(self.pcells[key].cell,
+            self.add(gdstk.Reference(self.pcells[key],
                                     origin=self.translations[key],
                                     x_reflection=self.reflections[key],
                                     rotation=self.rotations[key]))
 
-        cells_of_links = self._create_cells_of_links(name)
-        for _cell in cells_of_links:
-            cell.add(gdstk.Reference(_cell))
-
-        return cell
+        # Create and add routing cells
+        self._add_routing_cells(name)
 
     def _preprocess_inputs(self):
         self.translations = {} if self.translations is None else self.translations
         self.rotations = {} if self.rotations is None else self.rotations
         self.reflections = {} if self.reflections is None else self.reflections
         self.links = [] if self.links is None else self.links
-        self.op_trace = TECH.TRACE.OPTICAL_TRACE if self.op_trace is None else self.op_trace
+        self.op_trace = TECH.TRACE.WAVEGUIDE_TRACE if self.op_trace is None else self.op_trace
         self.op_bend_radius = TECH.DIMENSION.BEND_RADIUS if self.op_bend_radius is None else self.op_bend_radius
-        self.el_trace = TECH.TRACE.METAL_TRACE if self.el_trace is None else self.el_trace
+        self.el_trace = TECH.TRACE.WIRE_TRACE if self.el_trace is None else self.el_trace
         self.el_bend_radius = 0 if self.el_bend_radius is None else self.el_bend_radius
 
         for key in self.translations.keys():
@@ -76,8 +73,7 @@ class Circuit(bc.PCell):
             if key not in self.reflections.keys():
                 self.reflections.update({key: False})
 
-    def _create_cells_of_links(self, name):
-        cells_of_links = []
+    def _add_routing_cells(self, name):
         k = 0
         for link in self.links:
             port0 = self.pcells[link["from"][0]].ports[link["from"][1]]
@@ -104,13 +100,10 @@ class Circuit(bc.PCell):
                                                self.rotations[link["to"][0]],
                                                self.reflections[link["to"][0]])
 
-
             points = utils.calculate_path_between_two_ports(port0=port0, port1=port1, bend_radius=bend_radius)
-            link_cell = trace(name +'_link' + str(k), points, bend_radius=bend_radius)
+            routing_cell = trace(name +'_route' + str(k), points, bend_radius=bend_radius)
             k += 1
-            cells_of_links.append(link_cell.cell)
-
-        return cells_of_links
+            self.add(gdstk.Reference(routing_cell))
 
     def _create_ports(self, *args, **kwargs):
         ports = {}
@@ -131,4 +124,4 @@ class Circuit(bc.PCell):
                     ports.update({"port"+str(k):_port})
                     k += 1
 
-        return ports
+        self.ports.update(ports)
