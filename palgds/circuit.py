@@ -83,7 +83,6 @@ class Circuit(bc.PCell):
             port0 = self.pcells[link["from"][0]].ports[link["from"][1]]
             port1 = self.pcells[link["to"][0]].ports[link["to"][1]]
 
-            print(port0[3], port1[3] )
             if port0[3] == port1[3] == "op":
                 trace = self.op_trace
                 bend_radius = self.op_bend_radius
