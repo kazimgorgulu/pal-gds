@@ -21,9 +21,6 @@ class PCell:
     def name(self):
         return self.cell.name
 
-    def write_svg(self, *args, **kwargs):
-        return self.cell.write_svg(*args, **kwargs)
-
     def __repr__(self):
         rep = 'PCell name: ' + self.name + ' --- Ports: ' + str(len(self.ports))+ \
               ' --- Type: ' + str(type(self).__name__)
