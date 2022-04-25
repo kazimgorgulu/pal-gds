@@ -2,14 +2,14 @@ import palgds.base_cells as bc
 
 
 class WaveguideTrace(bc.Trace):
-    """Trace template for optical trace"""
+    """Trace template for optical routes"""
 
     def __init__(self, name, points, bend_radius=5):
         super().__init__(name, points, width=0.45, bend_radius=bend_radius, layer=0, datatype=0, port_type='op')
         pass
 
 class WireTrace(bc.Trace):
-    """Trace template for metal trace"""
+    """Trace template for electrical routes"""
 
     def __init__(self, name, points, bend_radius=0):
         super().__init__(name, points, width=1.5, bend_radius=bend_radius, layer=10, datatype=0, port_type='el')

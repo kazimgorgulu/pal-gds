@@ -1,6 +1,7 @@
 import gdstk
 from palgds.utils import read_ports_from_txt_file
 
+# long term To-Do: Class definitions for ports
 
 class PCell(gdstk.Cell):
 
