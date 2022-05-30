@@ -1,7 +1,7 @@
 import gdstk
-from palgds.utils import read_ports_from_txt_file
+from palgds.utils import read_raw_ports_from_txt_file
+import numpy as np
 
-# long term To-Do: Class definitions for ports
 
 class PCell(gdstk.Cell):
 
@@ -16,9 +16,12 @@ class PCell(gdstk.Cell):
         pass
 
     def __repr__(self):
-        rep = 'PCell name: ' + self.name + ' --- Ports: ' + str(len(self.ports))+ \
-              ' --- Type: ' + str(type(self).__name__)
-        return rep
+        return object.__repr__(self) + " " + self.__dict__.__str__()
+
+    def __str__(self):
+        s = f"PCell <{type(self).__name__}> name:'{self.name}' with {len(self.ports)} ports, {len(self.polygons)}" \
+            f" polygons, {len(self.paths)} paths, {len(self.references)} references, and {len(self.labels)} labels"
+        return s
 
 class Trace(PCell):
     # To-Do: Directional fix is required for ports.
@@ -33,8 +36,8 @@ class Trace(PCell):
         self.add(shape)
 
     def _create_ports(self, points, port_type):
-        self.ports.update({"in": (points[0][0], points[0][1], 180, port_type),
-                           "out": (points[-1][0], points[-1][1], 0, port_type)})
+        self.ports.update({"in": Port((points[0][0], points[0][1]), np.pi , port_type),
+                           "out": Port((points[-1][0], points[-1][1]), 0, port_type)})
 
 class TextCell(PCell):
     def __init__(self, name, text, size=35, position=(0,0), vertical=False, layer=100, datatype=0):
@@ -73,27 +76,20 @@ class GDSCell(PCell):
         elif ports_filename is None:
             pass
         else:
-            self.ports.update(read_ports_from_txt_file(ports_filename))
+            raw_ports = read_raw_ports_from_txt_file(ports_filename)
+            for key, value in raw_ports.items():
+                self.ports.update({key: Port(value[:2], value[2], value[3])})
 
-class GDSRawCell(gdstk.RawCell):
-    # To be implemented later ...
-    def __init__(self, filename, cell_name, ports=None, ports_filename=None):
-        # self._create_elements(filename, cell_name)
-        # ports = self._create_ports(ports, ports_filename)
-        super().__init__(cell_name)
-        pass
+class Port:
+    def __init__(self, position, angle, port_type="op"):
+        self.position = position
+        self.angle = angle
+        self.port_type = port_type
 
-    def _create_elements(self, filename, cell_name):
-        self._raw_cells = gdstk.read_rawcells(filename)
-        return self._raw_cells[cell_name]
-
-    def _create_ports(self, ports, ports_filename):
-        if ports is not None:
-            return ports
-        elif ports_filename is None:
-            return {}
-        else:
-            return read_ports_from_txt_file(ports_filename)
+    def __repr__(self):
+        s = f'Port(position=({self.position[0]:.3f}, {self.position[1]:.3f}), angle={self.angle:.3f},' \
+            f' port_type={self.port_type})'
+        return s
 
 
 

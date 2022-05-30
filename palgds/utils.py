@@ -13,17 +13,17 @@ def break_library_into_components(filename, path_for_components):
         filename = path_for_components + i.name +'.gds'
         temp_lib.write_gds(filename)
 
-def read_ports_from_txt_file(filename):
-    """Important note: The angle value in the file should be in the unit of degrees. It is converted to radians here."""
+def read_raw_ports_from_txt_file(filename):
+    """Important note: The angle value in the file should be R, L, U or D. It is converted to radians here."""
     try:
         with open(filename) as txt_file:
             lines = txt_file.read().splitlines()
     except FileNotFoundError:
-        print("Error: No file exist with name ", filename, " for reading ports.", sep="'")
+        print("Error: No file exist with name ", filename, " for reading raw_ports.", sep="'")
         raise FileNotFoundError from None
 
     orientation_dict = {"R":0, "L":np.pi, "U":np.pi/2, "D":3/2*np.pi}
-    ports = {}
+    raw_ports = {}
     s = lines[0]
     s = s.replace(' ', '') #remove all whitespaces
     while len(s) > 0:
@@ -35,20 +35,23 @@ def read_ports_from_txt_file(filename):
         try:
             name, x, y, orientation, port_type= p.split(',')
             angle = orientation_dict[orientation]
-            ports.update({name: (float(x), float(y), angle, port_type)})
+            raw_ports.update({name: (float(x), float(y), angle, port_type)})
         except:
-            print('Error in splitting coordinates of ports! filename:', filename)
+            print('Error in splitting coordinates of raw ports! filename:', filename)
             raise ValueError
 
         s = s[l + 1:]
 
-    return ports
+    return raw_ports
 
-def calculate_path_between_two_ports(port0, port1, bend_radius):
-    s_p = port0[:2]  # start point
-    e_p = port1[:2]  # end point
-    s_ang = round(port0[2] * 180/np.pi, 2) # start angle in degrees
-    e_ang = round(port1[2] * 180/np.pi, 2) # end angle in degrees
+def calculate_path_between_two_ports(_port0, _port1, bend_radius):
+    """
+    _port0, _port1 : (x, y, angle)
+    """
+    s_p = _port0[0:2] # start point
+    e_p = _port1[0:2] # end point
+    s_ang = round(_port0[2] * 180 / np.pi, 2) # start angle in degrees
+    e_ang = round(_port1[2] * 180 / np.pi, 2) # end angle in degrees
     r = bend_radius
 
     if s_ang == 0:
@@ -185,12 +188,14 @@ def calculate_path_between_two_ports(port0, port1, bend_radius):
 
     return points
 
-def apply_transformation(port, translation=(0, 0), rotation=0, x_reflection=False):
-    """Note: reflection is applied before rotation."""
+def apply_transformation(_port, translation=(0, 0), rotation=0, x_reflection=False):
+    """Note: reflection is applied before rotation.
+    _port : (x, y, angle)
+    """
 
-    p_x = port[0]
-    p_y = port[1]
-    p_angle = port[2] % (np.pi * 2)
+    p_x = _port[0]
+    p_y = _port[1]
+    p_angle = _port[2] % (np.pi * 2)
 
     # apply x-reflection
     if x_reflection:
@@ -205,4 +210,4 @@ def apply_transformation(port, translation=(0, 0), rotation=0, x_reflection=Fals
     p_x = p_x + translation[0]
     p_y = p_y + translation[1]
 
-    return p_x, p_y, p_angle, port[3]
+    return p_x, p_y, p_angle

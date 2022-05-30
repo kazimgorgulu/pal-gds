@@ -6,6 +6,10 @@ import palgds.utils as utils
 TECH = tech.TECH
 
 class Circuit(bc.PCell):
+    """
+    links: represent the logical connections between the ports. They will be used for creating physical routes in the
+    layout of the circuit.
+    """
 
     def __init__(self, name, pcells, translations=None, rotations=None, reflections=None, links=None,
                  op_trace=None, op_bend_radius=None, el_trace=None, el_bend_radius=None):
@@ -79,28 +83,31 @@ class Circuit(bc.PCell):
             port0 = self.pcells[link["from"][0]].ports[link["from"][1]]
             port1 = self.pcells[link["to"][0]].ports[link["to"][1]]
 
-            if port0[3] == port1[3] == "op":
+            if port0.port_type == port1.port_type == "op":
                 trace = self.op_trace
                 bend_radius = self.op_bend_radius
-            elif port0[3] == port1[3] == "el":
+            elif port0.port_type == port1.port_type == "el":
                 trace = self.el_trace
                 bend_radius = self.el_bend_radius
             else:
                 raise ValueError("Trying to connect different port types!" +
-                                 f" --- port0_type:{port0[3]} vs port1_type:{port1[3]}" )
+                                 f" --- port0_type:{port0.port_type} vs port1_type:{port1.port_type}" )
+
+            # Create temporary ports to avoid changing default port parameters of PCells.
+            _port0 = (*port0.position, port0.angle)
+            _port1 = (*port1.position, port1.angle)
 
             # Apply transformations to ports:
-            port0 = utils.apply_transformation(port0,
-                                               self.translations[link["from"][0]],
-                                               self.rotations[link["from"][0]],
-                                               self.reflections[link["from"][0]])
+            _port0 = utils.apply_transformation(_port0,
+                                                self.translations[link["from"][0]],
+                                                self.rotations[link["from"][0]],
+                                                self.reflections[link["from"][0]])
+            _port1 = utils.apply_transformation(_port1,
+                                                self.translations[link["to"][0]],
+                                                self.rotations[link["to"][0]],
+                                                self.reflections[link["to"][0]])
 
-            port1 = utils.apply_transformation(port1,
-                                               self.translations[link["to"][0]],
-                                               self.rotations[link["to"][0]],
-                                               self.reflections[link["to"][0]])
-
-            points = utils.calculate_path_between_two_ports(port0=port0, port1=port1, bend_radius=bend_radius)
+            points = utils.calculate_path_between_two_ports(_port0=_port0, _port1=_port1, bend_radius=bend_radius)
             routing_cell = trace(name +'_route' + str(k), points, bend_radius=bend_radius)
             k += 1
             self.add(gdstk.Reference(routing_cell))
@@ -117,11 +124,12 @@ class Circuit(bc.PCell):
                     if link["to"][0] == key and link["to"][1] == i:
                         is_used = True
                 if not is_used:
-                    _port = self.pcells[key].ports[i]
+                    port = self.pcells[key].ports[i]
+                    _port = (*port.position, port.angle)
                     _port = utils.apply_transformation(_port, self.translations[key], self.rotations[key],
                                                        self.reflections[key])
 
-                    ports.update({"port"+str(k):_port})
+                    ports.update({"port"+str(k):bc.Port(_port[:2], _port[2], port.port_type)})
                     k += 1
 
         self.ports.update(ports)
