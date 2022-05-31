@@ -2,7 +2,7 @@ Creating Circuits
 -----------------
 
 
-``Circuit`` class in palgds is used for creating automated layouts of complex photonic circuits.
+``Circuit`` class in ``palgds`` is used for creating automated layouts of complex photonic circuits.
 The designer provides the individidual components and the links between their ports. The optical or 
 electrical routes automatically generated in ``Circuit`` class. 
 
@@ -36,7 +36,7 @@ file into your working directory. Here, we are manually providing the port of th
 
 Now, we will create the circuit using these components. Here, ``pcells`` is the dict of cells that compose the circuit. ``translation`` (default: ``(0, 0)``) and
 ``rotation`` (default: ``0`` in radians) are transformations of individual components. Connections between ports are provided
-with ``links``.
+with ``links``. Waveguide routes between the connected ports will be created with default trace with 450 nm wide waveguides. 
 
 .. literalinclude:: _tutorial/example1.py
     :start-at: circuit = Circuit(name='RingResCircuit',
@@ -47,18 +47,40 @@ with ``links``.
     :align: center
 
 
+You can also export layout with:
+
+.. code-block:: python
+
+    lib = gdstk.Library()
+    lib.add(circuit, *circuit.dependencies(True))
+    lib.write_gds("RingResCircuit.gds", max_points=4000)
+
+
 
 Circuit Layout 2: Advanced
 ************************************
 
-Let's create a Mach-Zehnder interferometer circuit. We will read a custom made Y-Branch with ``GDSCell``. 
-First, make sure you download and put "YBranch.gds" and "YBranch.txt" files into your working directory. Then
-create the Y-Branch object:
+In this section, we will build the layout of an unbalanced Mach-Zehnder interferometer circuit. We will read a
+custom made Y-Branch with ``GDSCell``. Then, create a custom ``Trace`` to be used as routing template in the 
+circuit.First, make sure you download and put "YBranch.gds" and "YBranch.txt" files into your working
+directory. Then create the Y-Branch object:
 
 .. code-block:: python
+
+    import gdstk
+    import numpy as np
+    import palgds.base_cells as bc
+    from palgds.circuit import Circuit
+
 
     ybranch = bc.GDSCell(name="YBranch", filename='YBranch.gds', ports_filename="YBranch.txt")
 
 
 .. image:: _tutorial/YBranch.svg
     :align: center
+
+
+Default waveguide trace in ``palgds`` is a 450 nm wide waveguide with a layer number of '0'. Let's create 
+a custom trace template with two layers representing a waveguide with core and cladding:
+
+
