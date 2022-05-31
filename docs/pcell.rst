@@ -50,7 +50,7 @@ radius of 5 :math:`\mu m`, coupling gap of 0.2 :math:`\mu m`, and line-width of 
     ring_res = RingResonator(name="RingRes", radius=5, gap=0.2, width=0.45)
     ring_res.write_svg("RingRes.svg")
 
-.. image:: _tutorial/ringres.svg
+.. image:: _tutorial/RingRes.svg
     :align: center
 
 You can export the GDSII layout using a library:
