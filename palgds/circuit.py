@@ -113,6 +113,7 @@ class Circuit(bc.PCell):
             self.add(gdstk.Reference(routing_cell))
 
     def _create_ports(self, *args, **kwargs):
+        """Creates exposed ports of the circuit from unused ports of composing pcells"""
         ports = {}
         k = 0
         for key in self.pcells:

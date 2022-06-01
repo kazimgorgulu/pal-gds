@@ -78,12 +78,52 @@ circuit = Circuit(name='RingResCircuit',
 draw(circuit, path, scale=600)
 
 ybranch = bc.GDSCell(name="YBranch", filename='YBranch.gds', ports_filename="YBranch.txt")
-draw(ybranch, path)
+draw(ybranch, path, scale=250)
+
+class CustomTrace(bc.Trace):
+
+    def __init__(self, name, points, bend_radius=5):
+        super().__init__(name, points, width=[0.45, 3], bend_radius=bend_radius,
+                         layer=[0, 1], datatype=[0, 0], port_type='op')
+        pass
+# End of trace class
+
+trace = CustomTrace(name='Trace', points=[(0, 0), (20, 0), (20, 10), (40, 10)])
+draw(trace, path, scale=300)
+
+circuit.add(gdstk.Reference(trace))
+
+lib = gdstk.Library()
+lib.add(circuit, *circuit.dependencies(True))
+lib.write_gds(path + "circuit.gds", max_points=4000)
 
 
+from palgds.pcell_library import DirectionalCoupler
+
+dc = DirectionalCoupler(name="Directional_Coupler")
+draw(dc, path)
+
+lib = gdstk.Library()
+lib.add(dc, *dc.dependencies(True))
+lib.write_gds(path + "direc.gds", max_points=4000)
 
 
+balanced_mzi = Circuit(name='Balanced_MZI',
+                  pcells={"dc1": dc, "dc2": dc},
+                  translations={"dc1": (0, 0),
+                                "dc2": (50, 0),
+                                },
+                  links=[{"from": ("dc1", "out1"), "to": ("dc2", "in1")},
+                         {"from": ("dc1", "out2"), "to": ("dc2", "in2")},
+                         ],
+                  op_trace=CustomTrace
+                  )
+# end of balanced mzi
 
+lib = gdstk.Library()
+lib.add(balanced_mzi, *balanced_mzi.dependencies(True))
+lib.write_gds(path + "balanced_mzi.gds", max_points=4000)
+draw(balanced_mzi, path, scale=600)
 
 
 
