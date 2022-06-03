@@ -1,7 +1,5 @@
-def draw(pcell, path, scale=300):
+def draw(pcell, path, scaling=10):
     """ svg export function from gdstk library."""
-    bb = pcell.bounding_box()
-    scaling = scale / (1.1 * (bb[1][0] - bb[0][0]))
     name = path + pcell.name + ".svg"
     pcell.write_svg(
         name,
