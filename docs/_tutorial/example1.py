@@ -1,18 +1,13 @@
 import gdstk
 import numpy as np
 
-import os 
-import sys
 import palgds.base_cells as bc
 from palgds.circuit import Circuit
 
-print(sys.path)
-print(os.getcwd())
-
+import os 
+import sys
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
-print(sys.path)
-print(os.getcwd())
 
 def draw(pcell, path, scale=300):
     """ svg export function from gdstk library."""

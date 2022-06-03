@@ -1,5 +1,5 @@
-Creating Circuits
------------------
+Circuits
+----------
 
 
 ``Circuit`` class in ``palgds`` is used for creating automated layouts of complex photonic circuits.
