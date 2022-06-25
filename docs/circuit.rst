@@ -11,26 +11,31 @@ Circuit Layout 1: Basics
 ***************************
 
 In this section we will create a simple circuit with a ring resonator and grating couplers. For this, we will use the same ring
-resonator PCell definition that we used in previous section.
+resonator definition that we used in previous section. A PCell definition of ring resonator also exists 
+in the ``pcell_library`` of ``palgds``. Let's start with following imports:
 
 .. code-block:: python
     
     import gdstk
     import numpy as np
     import palgds.base_cells as bc
+    from palgds.pcell_library import RingResonator
     from palgds.circuit import Circuit
 
 
+Then, create ring_res object:
+
+.. code-block:: python
+    
     ring_res = RingResonator(name="RingRes", radius=10, gap=0.2, width=0.45)
 
 
-We will grating coupler PCell by reading an existing  GDS file. Make sure you download and put "Grating_Coupler.gds" 
+We will grating coupler PCell by reading an existing GDS file. Make sure you download and put "GC.gds" 
 file into your working directory. Here, we are manually providing the port of the grating coupler.
 
 .. code-block:: python
 
-    gc = bc.GDSCell(name="Grating_Coupler", filename='Grating_Coupler.gds',
-                    ports={"in": bc.Port((1, 0), 0, "op")})
+    gc = bc.GDSCell(name="GC", filename='GC.gds', ports={"in": bc.Port((1, 0), 0, "op")})
 
 
 
@@ -38,7 +43,7 @@ Now, we will create the circuit using these components. Here, ``pcells`` is the 
 ``rotation`` (default: ``0`` in radians) are transformations of individual components. Connections between ports are provided
 with ``links``. Waveguide routes between the connected ports will be created with default trace with 450 nm wide waveguides. 
 
-.. literalinclude:: _tutorial/example1.py
+.. literalinclude:: _tutorial/circuit_ex.py
     :start-at: circuit = Circuit(name='RingResCircuit',
     :end-before: # end of circuit
 
@@ -47,10 +52,10 @@ Then, export layout:
 .. code-block:: python
 
     lib = gdstk.Library()
-    lib.add(circuit, *circuit.dependencies(True))
+    lib.add(ring_res_circuit , *ring_res_circuit.dependencies(True))
     lib.write_gds("RingResCircuit.gds", max_points=4000)
 
-.. image:: _tutorial/RingResCircuit.svg
+.. image:: _source_files/RingResCircuit.svg
     :align: center
 
 
@@ -58,12 +63,14 @@ Then, export layout:
 Circuit Layout 2: Advanced
 ************************************
 
-In this section, we will build the layout of balanced and unbalanced Mach-Zehnder interferometer circuits. 
-We will first create a directional coupler and then create a custom ``Trace`` to be 
+In this section, we will build the layout of unbalanced Mach-Zehnder interferometer circuit. 
+We will use an existing MMI as a coupler and also create a custom ``Trace`` to be 
 used as routing template in the  circuit.
 
-Parametric definition of a directional coupler exists in ``pcell_library`` of ``palgds``. Therefore, start with
-following imports and create directional coupler:
+We will create MMI PCell from existing GDS file. Make sure you download and put "MMI.gds" 
+file into your working directory. This is a one-input two-output coupler. In this case we will not manually set the ports of MMI,
+instead we will read the ports from a text file. Therefore, also make sure you downdload "MMI.txt" file to working directory.
+Start with following imports and MMI coupler:
 
 .. code-block:: python
 
@@ -72,41 +79,53 @@ following imports and create directional coupler:
     import palgds.base_cells as bc
     from palgds.circuit import Circuit
 
-    from palgds.pcell_library import DirectionalCoupler
 
-    dc = DirectionalCoupler(name="Directional_Coupler", Lc=10, width=0.45, gap=0.2, y_span=4)
+    mmi = bc.GDSCell(name="MMI", filename='MMI.gds', ports_filename="MMI.txt")
 
-.. image:: _tutorial/Directional_Coupler.svg
+.. image:: _source_files/MMI.svg
     :align: center
 
 
-Default waveguide trace in ``palgds`` is a 450 nm wide waveguide with a layer number of '0'. Let's create 
-a custom trace template with two layers representing a waveguide with core and cladding:
+This MMI coupler has output waveguides with width of 500 nm. However, default waveguide trace in ``palgds`` is a 450 nm wide
+waveguide with a layer number of '0'. Therefore, we need to create a custom trace template compatible with MMI outputs:
 
 
-.. literalinclude:: _tutorial/example1.py
+.. literalinclude:: _tutorial/circuit_ex.py
     :start-at: class CustomTrace(bc.Trace):
     :end-before: # End of trace class
 
 
-Let's create a sample waveguide layout with this trace.
+Let's create a straight waveguide layout with this trace.
 
 .. code-block:: python
 
-    trace = CustomTrace(name='Trace', points=[(0, 0), (20, 0), (20, 10), (40, 10)])
+    straight_wg = CustomTrace(name='Trace', points=[(0, 0), (10, 0)])
 
-.. image:: _tutorial/Trace.svg
+.. image:: _source_files/Trace.svg
     :align: center
 
 
-Now, we will create a balanced Mach-Zehnder interferometer circuit:
-
-.. literalinclude:: _tutorial/example1.py
-    :start-at: balanced_mzi = Circuit(name='Balanced_MZI',
-    :end-before: # end of balanced mzi
+|
+Now, we will create a unbalanced Mach-Zehnder interferometer circuit. Let's first place two MMIs and straight waveguide cells.
 
 
-.. image:: _tutorial/Balanced_MZI.svg
+.. literalinclude:: _tutorial/circuit_ex.py
+    :start-at: mzi_no_routes = Circuit(name='MZI_no_routes',
+    :end-before: # end of mzi
+
+
+.. image:: _source_files/MZI_no_routes.svg
+    :align: center
+
+Now, we will add links of this circuit. Links will create the automated routes between ports. Be aware, since the our trace is now 500 nm
+wide, we also need to pass the ``CustomTrace`` as the optical trace (``op_trace``) argument to the ``Circuit`` class.
+
+.. literalinclude:: _tutorial/circuit_ex.py
+    :start-at: mzi = Circuit(name='MZI',
+    :end-before: # end of mzi
+
+
+.. image:: _source_files/MZI.svg
     :align: center
 
 

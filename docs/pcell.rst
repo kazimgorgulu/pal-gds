@@ -37,7 +37,7 @@ you can include many parameters that you can adjust while creating a ring resona
 create the geometric layout elements. These geometric elements will be a ring and a bus waveguide in a basic ring
 resonator. See the following code:
 
-.. literalinclude:: _tutorial/example1.py
+.. literalinclude:: _tutorial/pcell.py
     :start-at: class RingResonator(bc.PCell)
     :end-at: "out": bc.Port((radius, 0), 0, "op"),})
 
@@ -50,7 +50,7 @@ radius of 5 :math:`\mu m`, coupling gap of 0.2 :math:`\mu m`, and line-width of 
     ring_res = RingResonator(name="RingRes", radius=5, gap=0.2, width=0.45)
     ring_res.write_svg("RingRes.svg")
 
-.. image:: _tutorial/RingRes.svg
+.. image:: _source_files/RingRes.svg
     :align: center
 
 You can export the GDSII layout using a library:
@@ -77,7 +77,7 @@ port in radians, and ``port_type`` is the type of the port: either ``"op"`` for 
 for electrical ports.
 
 Currently, we will not use the ports but they will be very important when creating circuits from PCells. Finally,
-Let's display the string representations of ``ring_res`` object and its ports:
+let's display the string representations of ``ring_res`` object and its ports:
 
 .. code-block:: python
 

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="594" height="108" viewBox="-297 -54 594 108">
+<defs>
+<style type="text/css">
+.l0d0 {fill:darkorange;stroke:chocolate;}
+</style>
+</defs>
+<rect x="-297" y="-54" width="594" height="108" fill="none" stroke="none"/>
+<g id="MMI" transform="scale(1 -1)">
+<polygon id="0000025C49704F00" class="l0d0" points="-135,-6.75 -270,-2.25 -270,2.25 -135,6.75"/>
+<polygon id="0000025C49704F70" class="l0d0" points="135,6.75 135,20.25 270,15.75 270,11.25"/>
+<polygon id="0000025C49704FE0" class="l0d0" points="135,-20.25 135,-6.75 270,-11.25 270,-15.75"/>
+<polygon id="0000025C49705280" class="l0d0" points="-135,-27 -135,27 135,27 135,-27"/>
+</g>
+</svg>

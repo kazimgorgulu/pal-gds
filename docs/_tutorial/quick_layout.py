@@ -9,18 +9,18 @@ from draw import draw
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 development = True
-path = os.path.dirname(os.path.abspath(__file__)) + "/"
+#path = os.path.dirname(os.path.abspath(__file__)) + "/"
+path = "../_source_files/"
 
 
 
 dc = DirectionalCoupler(name="DC", Lc=10, width=0.45, Ls=8, y_span=4, layer=0, datatype=0)
-dc.write_svg("DC.svg")
+dc.write_svg(path + "DC.svg")
 if development:
     draw(dc, path, scaling=7)
 
 
-gc = bc.GDSCell(name="GC", filename='GC.gds', ports={"in": bc.Port((0, 0), 0, "op")})
-dc.write_svg("GC.svg")
+gc = bc.GDSCell(name="GC", filename=path+'GC.gds', ports={"in": bc.Port((0, 0), 0, "op")})
 if development:
     draw(gc, path, scaling=6)
 
@@ -45,6 +45,7 @@ if development:
     draw(dc_circuit, path, scaling=5)
 
 
-lib = gdstk.Library()
-lib.add(dc_circuit, *dc_circuit.dependencies(True))
-lib.write_gds("DC_Circuit.gds", max_points=4000)
+# lib = gdstk.Library()
+# lib.add(dc_circuit, *dc_circuit.dependencies(True))
+# lib.write_gds(path + "DC_Circuit.gds", max_points=4000)
+

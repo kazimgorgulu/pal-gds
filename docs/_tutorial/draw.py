@@ -1,6 +1,11 @@
-def draw(pcell, path, scaling=10):
+def draw(pcell, path, scaling=10, name=None):
     """ svg export function from gdstk library."""
-    name = path + pcell.name + ".svg"
+    
+    if name is not None:
+        name = path + name + ".svg"
+    else:
+        name = path + pcell.name + ".svg"
+
     pcell.write_svg(
         name,
         scaling=scaling,

@@ -2,6 +2,8 @@ import gdstk
 import numpy as np
 import palgds.base_cells as bc
 
+
+# Directional Coupler:
 class DirectionalCoupler(bc.PCell):
     def __init__(self, name, Lc=10, gap=0.2, width=0.45, Ls=8, y_span=4, layer=0, datatype=0, tolerance=1e-3):
         super().__init__(name)
@@ -33,3 +35,21 @@ class DirectionalCoupler(bc.PCell):
         func = lambda u: np.array((length * u, (1 - np.cos(np.pi * u)) / 2 * delta))
         grad = lambda u: np.array((length, np.sin(np.pi * u) / 2 * delta))
         return func, grad
+
+
+# Ring Resonator:
+class RingResonator(bc.PCell):
+    def __init__(self, name, radius, gap, width, layer=0, datatype=0):
+        super().__init__(name)
+        self._create_elements(radius, gap, width, layer, datatype)
+        self._create_ports(radius)
+
+    def _create_elements(self, radius, gap, width, layer, datatype):
+        center = (0, radius+gap+width)
+        ring = gdstk.ellipse(center, radius+width/2, radius-width/2, layer=layer, datatype=datatype, tolerance=2e-4)
+        straight_waveguide = gdstk.rectangle((-radius, -width/2), (radius, width/2), layer=layer, datatype=datatype)
+        self.add(ring, straight_waveguide)
+
+    def _create_ports(self, radius):
+        self.ports.update({"in": bc.Port((-radius, 0), np.pi, "op"),
+                           "out": bc.Port((radius, 0), 0, "op"),})

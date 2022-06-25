@@ -13,8 +13,8 @@ Let's start by importing following packages:
     :end-at: from palgds.pcell_library import DirectionalCoupler
 
 
-Now, let's create a directional coupler cell with 0.45 um wide waveguides, 10 um coupling length, 0.2 um gap, and y-span of 4 um.
-
+Now, let's create a directional coupler cell with 0.45 um wide waveguides, 10 um coupling length, 8 um S-bend length,
+0.2 um gap, and y-span of 4 um.
 
 
 .. code-block:: python
@@ -27,7 +27,7 @@ For visualization we can export to svg by using `write_svg` function.
 
     dc.write_svg("DC.svg")
 
-.. image:: _tutorial/DC.svg
+.. image:: _source_files/DC.svg
     :align: center
 
 
@@ -38,7 +38,7 @@ file into your working directory. Here, we are manually providing the port of th
 
     gc = bc.GDSCell(name="GC", filename='GC.gds',  ports={"in": bc.Port((1, 0), 0, "op")})
 
-.. image:: _tutorial/GC.svg
+.. image:: _source_files/GC.svg
     :align: center
 
 Now, we will create the circuit using these components. Here, ``pcells`` is the dict of cells that compose the circuit. ``translation`` (default: ``(0, 0)``) and
@@ -51,7 +51,7 @@ with ``links``.
     :end-before: # end of dc_circuit
 
 
-.. image:: _tutorial/DC_Circuit.svg
+.. image:: _source_files/DC_Circuit.svg
     :align: center
 
 
