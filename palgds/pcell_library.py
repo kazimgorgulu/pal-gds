@@ -1,3 +1,4 @@
+"""PCell library for common photonic components."""
 import gdstk
 import numpy as np
 import palgds.base_cells as bc
@@ -5,7 +6,20 @@ import palgds.base_cells as bc
 
 # Directional Coupler:
 class DirectionalCoupler(bc.PCell):
+    """Directional coupler cell."""
     def __init__(self, name, Lc=10, gap=0.2, width=0.45, Ls=8, y_span=4, layer=0, datatype=0, tolerance=1e-3):
+        """
+
+        :param name:
+        :param Lc:
+        :param gap:
+        :param width:
+        :param Ls:
+        :param y_span:
+        :param layer:
+        :param datatype:
+        :param tolerance:
+        """
         super().__init__(name)
         self._create_elements(Lc, gap, width, Ls, y_span, layer=0, datatype=0, tolerance=1e-3)
         self._create_ports(Lc)
@@ -39,7 +53,16 @@ class DirectionalCoupler(bc.PCell):
 
 # Ring Resonator:
 class RingResonator(bc.PCell):
+    """Ring resonator cell."""
     def __init__(self, name, radius, gap, width, layer=0, datatype=0):
+        """
+        :param name:
+        :param radius:
+        :param gap:
+        :param width:
+        :param layer:
+        :param datatype:
+        """
         super().__init__(name)
         self._create_elements(radius, gap, width, layer, datatype)
         self._create_ports(radius)

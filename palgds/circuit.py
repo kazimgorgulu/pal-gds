@@ -6,13 +6,25 @@ import palgds.utils as utils
 TECH = tech.TECH
 
 class Circuit(bc.PCell):
-    """
-    links: represent the logical connections between the ports. They will be used for creating physical routes in the
-    layout of the circuit.
+    """ Generates automated layouts of photonic integrated circuits.
     """
 
     def __init__(self, name, pcells, translations=None, rotations=None, reflections=None, links=None,
                  op_trace=None, op_bend_radius=None, el_trace=None, el_bend_radius=None):
+        """
+
+        :param name: Unique name of the cell.
+        :param pcells: Dict of cells that composes circuit.
+        :param translations: Dict of translations of each cell.
+        :param rotations: Dict of rotations of each cell.
+        :param reflections: Dict of reflections of each cell.
+        :param links: List of connections, represents the logical connections between the ports. They will be used
+         for creating physical routes in the layout of the circuit.
+        :param op_trace: Trace template for routes between optical ports.
+        :param op_bend_radius: Bend radius of optical routes.
+        :param el_trace: Trace template for routes between electrical ports.
+        :param el_bend_radius: Bend radius of electrical routes.
+        """
         super().__init__(name)
         self.pcells = pcells
         self.translations = translations
@@ -29,6 +41,10 @@ class Circuit(bc.PCell):
         self._create_ports()
 
     def _create_elements(self, name):
+        """
+        :param name: name of the circuit cell
+        :return:
+        """
         # Add child cells:
         for key in self.pcells:
             self.add(gdstk.Reference(self.pcells[key],
@@ -93,7 +109,7 @@ class Circuit(bc.PCell):
                 raise ValueError("Trying to connect different port types!" +
                                  f" --- port0_type:{port0.port_type} vs port1_type:{port1.port_type}" )
 
-            # Create temporary ports to avoid changing default port parameters of PCells.
+            # Create temporary raw ports to avoid changing default port parameters of PCells.
             _port0 = (*port0.position, port0.angle)
             _port1 = (*port1.position, port1.angle)
 

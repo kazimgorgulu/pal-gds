@@ -16,6 +16,7 @@ class WireTrace(bc.Trace):
 
 
 class Technology:
+    """Class that contains technology data"""
 
     def __init__(self):
         self.name = 'Default Technology'

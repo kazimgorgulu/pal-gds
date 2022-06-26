@@ -35,7 +35,9 @@ extensions = [
     'sphinx.ext.napoleon'
     ]
 
-autodoc_mock_imports = ["gdstk", "numpy"]
+autodoc_mock_imports = ["gdstk", "numpy", "palgds"]
+
+autoclass_content = 'both' # selects what content will be inserted into the main body of an autoclass directive. "init", "class", "both"
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates', '_tutorial']

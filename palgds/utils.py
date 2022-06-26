@@ -1,20 +1,27 @@
+""" General-purpose utility functions. """
+
 import gdstk
 import numpy as np
 
-def break_library_into_components(filename, path_for_components):
-    """# break_library_into_components('cornerstone_pdk/gds/CORNERSTONE MPW Run 28 GDSII Template.gds', 'cornerstone_pdk/gds/')"""
-    library = gdstk.read_gds(filename)
-    top_cells = library.top_level()
-
-    for i in top_cells:
-        print(i.name)
-        temp_lib = gdstk.Library()
-        temp_lib.add(i)
-        filename = path_for_components + i.name +'.gds'
-        temp_lib.write_gds(filename)
 
 def read_raw_ports_from_txt_file(filename):
-    """Important note: The angle value in the file should be R, L, U or D. It is converted to radians here."""
+    """ Reads the parameters of ports from txt file.
+
+        Note:
+
+        Ports in the txt file should be in this format:
+
+        (name, xpos, ypos, orientation, port_type)
+
+        orientation will be converted to the angle in radians (R:0, L:pi, U:pi, D: 3/2pi)
+        port_type is either 'op' for optical ports, or 'el' for electrical ports.
+        All ports should be in the first line of txt file. example txt file for ports:
+
+        (in,-10,0,L,op) (out1,10,2.5,R,op) (el_in,5,5,U,el)
+
+    :param filename: path and file name.
+    :return: dict of raw ports.
+    """
     try:
         with open(filename) as txt_file:
             lines = txt_file.read().splitlines()
@@ -22,7 +29,7 @@ def read_raw_ports_from_txt_file(filename):
         print("Error: No file exist with name ", filename, " for reading raw_ports.", sep="'")
         raise FileNotFoundError from None
 
-    orientation_dict = {"R":0, "L":np.pi, "U":np.pi/2, "D":3/2*np.pi}
+    orientation_dict = {"R": 0, "L": np.pi, "U": np.pi/2, "D": 3/2*np.pi}
     raw_ports = {}
     s = lines[0]
     s = s.replace(' ', '') #remove all whitespaces
@@ -44,9 +51,14 @@ def read_raw_ports_from_txt_file(filename):
 
     return raw_ports
 
+
 def calculate_path_between_two_ports(_port0, _port1, bend_radius):
-    """
-    _port0, _port1 : (x, y, angle)
+    """Calculates the points of path between two port depending on angles of ports and bend radius.
+
+    :param _port0: (x, y, angle)
+    :param _port1: (x, y, angle)
+    :param bend_radius:
+    :return: list of points
     """
     s_p = _port0[0:2] # start point
     e_p = _port1[0:2] # end point
@@ -188,9 +200,15 @@ def calculate_path_between_two_ports(_port0, _port1, bend_radius):
 
     return points
 
+
 def apply_transformation(_port, translation=(0, 0), rotation=0, x_reflection=False):
-    """Note: reflection is applied before rotation.
-    _port : (x, y, angle)
+    """ Transforms a port in this order: reflection, rotation and finally translation.
+
+    :param _port: (x, y, angle)
+    :param translation: (x, y)
+    :param rotation: in radians
+    :param x_reflection: boolean
+    :return: transformed raw port
     """
 
     p_x = _port[0]
