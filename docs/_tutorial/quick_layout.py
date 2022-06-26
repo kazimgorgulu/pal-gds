@@ -13,7 +13,6 @@ development = True
 path = "../_source_files/"
 
 
-
 dc = DirectionalCoupler(name="DC", Lc=10, width=0.45, Ls=8, y_span=4, layer=0, datatype=0)
 dc.write_svg(path + "DC.svg")
 if development:

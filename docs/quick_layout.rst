@@ -1,7 +1,7 @@
 Quick Layout
 -----------------
 
-In this section we will create a simple circuit layout with a directional coupler and grating couplers. We will first create 
+In this section, we will create a simple circuit layout with a directional coupler and grating couplers. We will first create 
 individual component cells and then create circuit by connecting these components. 
 We will use parametric cell definition of directional coupler existing 
 in ``pcell_library`` in ``palgds`` to keep tutorial short. 
@@ -21,7 +21,7 @@ Now, let's create a directional coupler cell with 0.45 um wide waveguides, 10 um
 
     dc = DirectionalCoupler(name="DC", Lc=10, width=0.45, Ls=8, y_span=4, layer=0, datatype=0)
 
-For visualization we can export to svg by using `write_svg` function.
+For visualization, you can export to svg by using `write_svg` function.
 
 .. code-block:: python
 
@@ -31,7 +31,7 @@ For visualization we can export to svg by using `write_svg` function.
     :align: center
 
 
-We will grating coupler PCell by reading an existing  GDS file. Make sure you download and put "Grating_Coupler.gds" 
+We will grating coupler PCell by reading an existing  GDS file. Make sure you download and put "GC.gds" 
 file into your working directory. Here, we are manually providing the port of the grating coupler.
 
 .. code-block:: python
@@ -55,7 +55,7 @@ with ``links``.
     :align: center
 
 
-In order to export to GDSII file we need to create a ``gdstk.Library`` and then add ``dc_circuit`` cell to it:
+In order to export to GDSII file, we need to create a ``gdstk.Library`` and then add ``dc_circuit`` cell to it:
 
 .. code-block:: python
 

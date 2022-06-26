@@ -41,8 +41,8 @@ resonator. See the following code:
     :start-at: class RingResonator(bc.PCell)
     :end-at: "out": bc.Port((radius, 0), 0, "op"),})
 
-After creating ``RingResonator`` class, we can create an instance of it. Thanks to the parametric implementation of this
-class, we can easily create variants of ring resonators. Let's create a ring resonator object with
+After creating ``RingResonator`` class, we can create an instance of it. Thanks to the parametric implementation, 
+we can easily create variants of ring resonators. Let's create a ring resonator object with
 radius of 5 :math:`\mu m`, coupling gap of 0.2 :math:`\mu m`, and line-width of 0.45 :math:`\mu m`:
 
 .. code-block:: python

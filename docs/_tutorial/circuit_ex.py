@@ -54,7 +54,7 @@ class CustomTrace(bc.Trace):
     def __init__(self, name, points, bend_radius=5):
         super().__init__(name, points, width=[0.5], bend_radius=bend_radius,
                          layer=[0], datatype=[0], port_type='op')
-        pass
+        
 # End of trace class
 
 straight_wg = CustomTrace(name='Trace', points=[(0, 0), (10, 0)])

@@ -2,7 +2,6 @@ import gdstk
 import numpy as np
 
 import palgds.base_cells as bc
-from palgds.circuit import Circuit
 from draw import draw
 
 import os 
@@ -33,7 +32,7 @@ class RingResonator(bc.PCell):
 
 ring_res = RingResonator(name="RingRes", radius=5, gap=0.2, width=0.45)
 if development:
-    draw(ring_res, path, scaling=12)
+    draw(ring_res, path, scaling=15)
 
 
 print(ring_res)

@@ -5,13 +5,13 @@
 .l0d0 {fill:darkorange;stroke:chocolate;}
 </style>
 <g id="MMI">
-<polygon id="0000025C49704F00" class="l0d0" points="-135,-6.75 -270,-2.25 -270,2.25 -135,6.75"/>
-<polygon id="0000025C49704F70" class="l0d0" points="135,6.75 135,20.25 270,15.75 270,11.25"/>
-<polygon id="0000025C49704FE0" class="l0d0" points="135,-20.25 135,-6.75 270,-11.25 270,-15.75"/>
-<polygon id="0000025C49705280" class="l0d0" points="-135,-27 -135,27 135,27 135,-27"/>
+<polygon id="0000022F4499C130" class="l0d0" points="-135,-6.75 -270,-2.25 -270,2.25 -135,6.75"/>
+<polygon id="0000022F4499C4B0" class="l0d0" points="135,6.75 135,20.25 270,15.75 270,11.25"/>
+<polygon id="0000022F4499BBF0" class="l0d0" points="135,-20.25 135,-6.75 270,-11.25 270,-15.75"/>
+<polygon id="0000022F4499BAA0" class="l0d0" points="-135,-27 -135,27 135,27 135,-27"/>
 </g>
 <g id="Trace">
-<polygon id="0000025C497051A0" class="l0d0" points="0,2.25 0,-2.25 90,-2.25 90,2.25"/>
+<polygon id="0000022F4499BB10" class="l0d0" points="0,2.25 0,-2.25 90,-2.25 90,2.25"/>
 </g>
 </defs>
 <rect x="-337.5" y="-204.75" width="1485" height="299.25" fill="none" stroke="none"/>

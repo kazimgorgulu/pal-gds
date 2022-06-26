@@ -10,9 +10,9 @@ electrical routes automatically generated in ``Circuit`` class.
 Circuit Layout 1: Basics
 ***************************
 
-In this section we will create a simple circuit with a ring resonator and grating couplers. For this, we will use the same ring
-resonator definition that we used in previous section. A PCell definition of ring resonator also exists 
-in the ``pcell_library`` of ``palgds``. Let's start with following imports:
+In this section, we will create a simple circuit with a ring resonator and grating couplers. For this, we will use the same ring
+resonator definition that we used in previous section. The same PCell definition of ring resonator also exists 
+in the ``pcell_library`` of ``palgds``. Therefore, let's start with following imports:
 
 .. code-block:: python
     
@@ -30,13 +30,12 @@ Then, create ring_res object:
     ring_res = RingResonator(name="RingRes", radius=10, gap=0.2, width=0.45)
 
 
-We will grating coupler PCell by reading an existing GDS file. Make sure you download and put "GC.gds" 
+We will create grating coupler cell by reading an existing GDS file. Make sure you download and put "GC.gds" 
 file into your working directory. Here, we are manually providing the port of the grating coupler.
 
 .. code-block:: python
 
     gc = bc.GDSCell(name="GC", filename='GC.gds', ports={"in": bc.Port((1, 0), 0, "op")})
-
 
 
 Now, we will create the circuit using these components. Here, ``pcells`` is the dict of cells that compose the circuit. ``translation`` (default: ``(0, 0)``) and
@@ -63,14 +62,14 @@ Then, export layout:
 Circuit Layout 2: Advanced
 ************************************
 
-In this section, we will build the layout of unbalanced Mach-Zehnder interferometer circuit. 
+In this section, we will build the layout of an unbalanced Mach-Zehnder interferometer (MZI) circuit. 
 We will use an existing MMI as a coupler and also create a custom ``Trace`` to be 
 used as routing template in the  circuit.
 
-We will create MMI PCell from existing GDS file. Make sure you download and put "MMI.gds" 
-file into your working directory. This is a one-input two-output coupler. In this case we will not manually set the ports of MMI,
+Make sure you download and put "MMI.gds" 
+file into your working directory. This is a one-input two-output coupler. In this case, we will not manually set the ports of MMI,
 instead we will read the ports from a text file. Therefore, also make sure you downdload "MMI.txt" file to working directory.
-Start with following imports and MMI coupler:
+Start with following imports and create MMI coupler:
 
 .. code-block:: python
 
@@ -106,7 +105,7 @@ Let's create a straight waveguide layout with this trace.
 
 
 |
-Now, we will create a unbalanced Mach-Zehnder interferometer circuit. Let's first place two MMIs and straight waveguide cells.
+Let's start building MZI circuit. First, place two MMIs and straight waveguide cells without connecting them.
 
 
 .. literalinclude:: _tutorial/circuit_ex.py
@@ -116,6 +115,8 @@ Now, we will create a unbalanced Mach-Zehnder interferometer circuit. Let's firs
 
 .. image:: _source_files/MZI_no_routes.svg
     :align: center
+
+Here, we rotated the second MMI by 180 degrees and took its x-reflection to align its first output port to be at the top.
 
 Now, we will add links of this circuit. Links will create the automated routes between ports. Be aware, since the our trace is now 500 nm
 wide, we also need to pass the ``CustomTrace`` as the optical trace (``op_trace``) argument to the ``Circuit`` class.
