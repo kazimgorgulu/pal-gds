@@ -1,4 +1,4 @@
-# PALGDS - README
+# PALGDS
 
 PALGDS is an open-source Python layout tool for photonic integrated circuits. It is built on top of Gdstk.
 
