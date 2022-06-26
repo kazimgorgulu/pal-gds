@@ -8,7 +8,7 @@ The complete documentation is available [here](https://palgds.readthedocs.io/en/
 
 ## Installation
 
-Clone the repository, go to the directory which includes ```setup.py``` and run
+Clone the repository, go to the directory which includes ```setup.py```, and run
 
 ```
 pip install .
